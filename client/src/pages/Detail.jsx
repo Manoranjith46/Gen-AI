@@ -4,7 +4,7 @@ import FinalReport from '../components/FinalReport';
 import DagVisualizer from '../components/DagVisualizer';
 import styles from './Detail.module.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 function Detail() {
   const { id } = useParams();

@@ -7,7 +7,7 @@ import FinalReport from './components/FinalReport';
 import History from './pages/History';
 import Detail from './pages/Detail';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 function HomePage() {
   const [contractId, setContractId] = useState(null);
