@@ -7,7 +7,6 @@ import FinalReport from './components/FinalReport';
 import History from './pages/History';
 import Detail from './pages/Detail';
 
-const API_BASE = import.meta.env.VITE_API_BASE;
 
 function HomePage() {
   const [contractId, setContractId] = useState(null);
@@ -24,7 +23,7 @@ function HomePage() {
 
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch(`${API_BASE}/contracts/${contractId}`);
+        const response = await fetch(`https://real-estate-api-943702612956.us-central1.run.app/api/contracts/${contractId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch contract status');
         }
@@ -100,7 +99,7 @@ function HomePage() {
 
       console.log(`[Upload] Uploading file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
 
-      const response = await fetch(`${API_BASE}/contracts/upload-file`, {
+      const response = await fetch(`https://real-estate-api-943702612956.us-central1.run.app/api/contracts/upload-file`, {
         method: 'POST',
         body: formData
       });

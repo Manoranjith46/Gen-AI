@@ -59,7 +59,7 @@ function History() {
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        const response = await fetch(`${API_BASE}/contracts`);
+        const response = await fetch(`https://real-estate-api-943702612956.us-central1.run.app/api/contracts`);
         if (!response.ok) {
           throw new Error('Failed to fetch contracts');
         }

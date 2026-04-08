@@ -15,7 +15,7 @@ function Detail() {
   useEffect(() => {
     const fetchContract = async () => {
       try {
-        const response = await fetch(`${API_BASE}/contracts/${id}`);
+        const response = await fetch(`https://real-estate-api-943702612956.us-central1.run.app/api/contracts/${id}`);
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error('Analysis not found');
@@ -41,7 +41,7 @@ function Detail() {
       }
 
       try {
-        const response = await fetch(`${API_BASE}/contracts/${id}`);
+        const response = await fetch(`https://real-estate-api-943702612956.us-central1.run.app/api/contracts/${id}`);
         if (response.ok) {
           const data = await response.json();
           setContract(data);
