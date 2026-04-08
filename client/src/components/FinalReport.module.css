@@ -1,0 +1,526 @@
+.container {
+  animation: slideUp 0.6s ease;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+/* Card Styles - Glassmorphism + Neumorphism */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-neu-outset);
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.04) 0%, transparent 100%);
+  position: relative;
+}
+
+.cardIcon {
+  width: 52px;
+  height: 52px;
+  background: var(--glass-bg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-blue);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-neu-outset);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover .cardIcon {
+  background: linear-gradient(135deg, var(--color-accent-blue) 0%, var(--color-accent-purple) 100%);
+  color: white;
+  box-shadow: var(--shadow-glow-blue);
+}
+
+.cardIcon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.card:hover .cardIcon::before {
+  opacity: 1;
+}
+
+.cardIcon svg {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.cardIconPurple {
+  color: var(--color-accent-purple);
+}
+
+.card:hover .cardIconPurple {
+  background: linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-pink) 100%);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.cardIconGreen {
+  color: var(--color-accent-green);
+}
+
+.card:hover .cardIconGreen {
+  background: linear-gradient(135deg, var(--color-accent-green) 0%, var(--color-accent-blue) 100%);
+  box-shadow: var(--shadow-glow-green);
+}
+
+.cardTitle h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.cardTitle p {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+/* Stat Rows */
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.statRow:last-child {
+  border-bottom: none;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.statValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Badges - Glassmorphism */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  border: 1px solid transparent;
+}
+
+.badge svg {
+  width: 16px;
+  height: 16px;
+}
+
+.badgeSuccess {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--color-accent-green);
+  border-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+}
+
+.badgeWarning {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--color-accent-yellow);
+  border-color: rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+}
+
+/* Issue Section */
+.issueSection {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.issueLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent-yellow);
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(245, 158, 11, 0.08);
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.issueLabel svg {
+  width: 18px;
+  height: 18px;
+}
+
+.issueList,
+.riskList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.issueList li,
+.riskList li {
+  position: relative;
+  padding: 0.75rem 1rem 0.75rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  background: var(--glass-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+}
+
+.issueList li::before,
+.riskList li::before {
+  content: '';
+  position: absolute;
+  left: 0.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+}
+
+.issueList li::before {
+  background: var(--color-accent-yellow);
+  box-shadow: 0 0 6px var(--color-accent-yellow);
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(16, 185, 129, 0.06);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: var(--radius-md);
+  margin-top: 1.25rem;
+}
+
+.emptyState svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-accent-green);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px var(--color-accent-green));
+}
+
+.emptyState span {
+  font-size: 0.9rem;
+  color: var(--color-accent-green);
+  font-weight: 500;
+}
+
+/* Financial Grid */
+.financialGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.financialItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.financialItem:last-child {
+  border-bottom: none;
+}
+
+.financialLabel {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.financialValue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+}
+
+.financialHighlight {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.financialTotal {
+  margin-top: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(16, 185, 129, 0.06);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  box-shadow: var(--shadow-glow-green);
+}
+
+.financialTotal .financialLabel {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.financialTotal .financialValue {
+  font-size: 1.3rem;
+  color: var(--color-accent-green);
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Actions - Glassmorphism */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.75rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-neu-outset);
+}
+
+.downloadButton,
+.printButton {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.downloadButton {
+  background: var(--gradient-accent);
+  border: none;
+  color: white;
+  box-shadow: var(--shadow-glow-blue);
+}
+
+.downloadButton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+}
+
+.downloadButton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.downloadButton:hover::after {
+  left: 100%;
+}
+
+.downloadButton:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    var(--shadow-glow-purple),
+    0 12px 30px rgba(59, 130, 246, 0.3);
+}
+
+.printButton {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  color: var(--color-text-secondary);
+  box-shadow: var(--shadow-neu-outset);
+}
+
+.printButton:hover {
+  background: var(--glass-highlight);
+  color: var(--color-text-primary);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-blue);
+}
+
+.downloadButton svg,
+.printButton svg {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cardHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .downloadButton,
+  .printButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .container {
+    background: white !important;
+    padding: 20px;
+    animation: none;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    background: white !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .cardHeader {
+    background: #f5f5f5 !important;
+  }
+
+  .cardIcon {
+    background: #3b82f6 !important;
+    box-shadow: none !important;
+  }
+
+  .cardIconPurple {
+    background: #8b5cf6 !important;
+  }
+
+  .cardIconGreen {
+    background: #10b981 !important;
+  }
+
+  .badge {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badgeSuccess {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+  }
+
+  .badgeWarning {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+  }
+
+  .actions {
+    display: none !important;
+  }
+
+  .financialTotal {
+    background: #f5f5f5 !important;
+  }
+
+  .financialHighlight {
+    color: #3b82f6 !important;
+  }
+}

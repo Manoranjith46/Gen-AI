@@ -1,4 +1,5 @@
 import AgentTask from './models/AgentTask.js';
+import Contract from './models/Contract.js';
 import { runVerificationAgent } from './agents/verification.js';
 import { runECAgent } from './agents/ec.js';
 import { runStampDutyAgent } from './agents/stampDuty.js';

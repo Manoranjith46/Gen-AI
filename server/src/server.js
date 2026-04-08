@@ -1,6 +1,10 @@
 import 'dotenv/config';
+import dns from 'dns';
 import express from 'express';
 import mongoose from 'mongoose';
+
+// Use Google's public DNS to resolve MongoDB Atlas SRV records
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 import cors from 'cors';
 import { startDaemon } from './daemon.js';
 
@@ -17,7 +21,7 @@ app.use('/api/contracts', contractRoutes);
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ MongoDB connected: DAG State Machine is online.');
-    startDaemon(); // <--- ADD THIS LINE HERE
+    startDaemon();
   })
   .catch(err => console.error('❌ MongoDB connection error:', err));
 

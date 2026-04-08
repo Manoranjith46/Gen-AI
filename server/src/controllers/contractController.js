@@ -1,35 +1,97 @@
 import Contract from '../models/Contract.js';
-import AgentTask from '../models/AgentTask.js'; 
+import AgentTask from '../models/AgentTask.js';
 import { extractTextFromPDF } from '../services/documentAI.js';
 import { runPrimaryAgent } from '../agents/primary.js';
+import { uploadPdfToGcs, validatePdfFile } from '../services/gcsUpload.js';
+
+/**
+ * POST /api/contracts/upload-file
+ * Handles direct PDF file upload and processing
+ * Expects multipart/form-data with 'pdf' field
+ */
+export const uploadFile = async (req, res) => {
+  try {
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ error: 'No PDF file uploaded. Please select a file.' });
+    }
+
+    // Validate the uploaded file
+    if (!validatePdfFile(req.file)) {
+      return res.status(400).json({
+        error: 'Invalid file. Please upload a PDF file smaller than 50MB.'
+      });
+    }
+
+    console.log(`[Upload] 📄 Processing file: ${req.file.originalname} (${(req.file.size / 1024 / 1024).toFixed(2)} MB)`);
+
+    // Upload file to Google Cloud Storage
+    const { gcsUri, filename } = await uploadPdfToGcs(req.file.buffer, req.file.originalname);
+
+    // 1. Create the main tracker in MongoDB
+    const newContract = new Contract({
+      filename,
+      gcsUri,
+      status: 'extracting'
+    });
+    await newContract.save();
+
+    // 2. Respond immediately so the React frontend doesn't timeout
+    res.status(202).json({
+      message: 'File uploaded successfully. Contract processing started.',
+      contractId: newContract._id,
+      filename,
+      gcsUri
+    });
+
+    // 3. BACKGROUND PROCESSING: Do not 'await' this block in the main thread
+    (async () => {
+      try {
+        console.log(`[Upload] 🔄 Starting background processing for contract: ${newContract._id}`);
+
+        // Step A: Extract Text
+        const rawText = await extractTextFromPDF(gcsUri, process.env.DOC_AI_PROCESSOR_ID);
+
+        // Step B: Trigger the Primary Agent to slice the text and build the DAG
+        await runPrimaryAgent(newContract._id, rawText);
+
+      } catch (backgroundError) {
+        console.error(`[Upload Background Error] Contract ${newContract._id}:`, backgroundError);
+        await Contract.findByIdAndUpdate(newContract._id, {
+          status: 'failed',
+          errorLog: backgroundError.message
+        });
+      }
+    })();
+
+  } catch (error) {
+    console.error('[Upload Error]:', error);
+
+    // Handle specific GCS errors
+    if (error.message.includes('GCS_BUCKET_NAME')) {
+      return res.status(500).json({
+        error: 'Storage configuration error. Please contact support.'
+      });
+    }
+
+    if (error.message.includes('Failed to upload file to GCS')) {
+      return res.status(500).json({
+        error: 'Failed to upload file to cloud storage. Please try again.'
+      });
+    }
+
+    res.status(500).json({
+      error: 'Failed to process file upload. Please try again.'
+    });
+  }
+};
 
 /**
  * POST /api/contracts/upload
- * Expects body: { gcsUri: "gs://your-bucket/file.pdf", filename: "Deed.pdf" }
+ * Legacy endpoint - Expects body: { gcsUri: "gs://your-bucket/file.pdf", filename: "Deed.pdf" }
+ * DEPRECATED: Use /upload-file instead for direct file uploads
  */
 export const processContract = async (req, res) => {
-
-    // Inside src/controllers/contractController.js -> processContract function
-(async () => {
-  try {
-    console.log("--- DEBUG: Starting Document AI Step ---");
-    const rawText = await extractTextFromPDF(gcsUri, process.env.DOC_AI_PROCESSOR_ID);
-    
-    console.log("--- DEBUG: Text Extracted! Length:", rawText?.length);
-    console.log("--- DEBUG: Calling Primary Agent now... ---");
-    
-    await runPrimaryAgent(newContract._id, rawText);
-    
-    console.log("--- DEBUG: Primary Agent Finished. Check MongoDB Tasks! ---");
-  } catch (backgroundError) {
-    console.error("--- DEBUG: BACKGROUND CRASH ---", backgroundError);
-    await Contract.findByIdAndUpdate(newContract._id, { 
-      status: 'failed', 
-      errorLog: backgroundError.message 
-    });
-  }
-})();
-
   try {
     const { gcsUri, filename } = req.body;
 
@@ -72,6 +134,24 @@ export const processContract = async (req, res) => {
   } catch (error) {
     console.error('Controller Error:', error);
     res.status(500).json({ error: 'Failed to initialize contract processing.' });
+  }
+};
+
+/**
+ * GET /api/contracts
+ * Lists all contracts with basic info for history view
+ */
+export const listContracts = async (req, res) => {
+  try {
+    const contracts = await Contract.find()
+      .select('_id filename uploadDate status')
+      .sort({ uploadDate: -1 })
+      .lean();
+
+    res.status(200).json(contracts);
+  } catch (error) {
+    console.error('List Contracts Error:', error);
+    res.status(500).json({ error: 'Failed to retrieve contracts.' });
   }
 };
 
